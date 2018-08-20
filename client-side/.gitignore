@@ -6,6 +6,9 @@
 # All css files since we are using SCSS
 src/**/*.css
 
+# All IDE related files
+../.idea
+
 # testing
 /coverage
 
