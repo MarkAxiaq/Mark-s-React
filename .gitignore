@@ -1,0 +1,12 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# All IDE related files
+.idea
+.idea/
+
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local.DS_Store
+.DS_Store
