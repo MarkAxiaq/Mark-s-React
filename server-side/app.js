@@ -1,7 +1,15 @@
 const express = require("express");
 const graphqlHTTP = require("express-graphql");
+const schema = require('./graphQLSchema/schema')
+const mongoose = require('mongoose');
+
 const app = express();
-const schema = require('./schema/schema')
+
+// Connecting to mLab - A database as a service for MongoDB
+mongoose.connect('mongodb://mark.axq:Passw0rd@ds115523.mlab.com:15523/web-trend')
+mongoose.connection.once('open', () => {
+   console.log('Connected to mLab - MongoDB is ready')
+});
 
 // .use >> For every route that includes graphql >> We are going to use graphqlHTTP >> express-graphql which let express understand graphql
 app.use("/graphql", graphqlHTTP({
