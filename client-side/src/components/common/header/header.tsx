@@ -2,10 +2,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as React from "react";
 // import logo from "../../../assets/images/logo.svg"
 import {Link} from 'react-router-dom';
+
 import "./header.css";
 
-
-const Header = () => {
+export default (props: object) => {
 
     const toggleSideMenu = () => {
         const sideBar = document.getElementById("sidebar");
@@ -15,7 +15,7 @@ const Header = () => {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav id="header" className="navbar navbar-expand-lg navbar-dark bg-dark">
             <a className="navbar-brand" href="#" onClick={toggleSideMenu}>
                 <FontAwesomeIcon icon="ellipsis-v" className="sideMenu" />
                 <strong> Web Trend BO</strong>
@@ -43,5 +43,4 @@ const Header = () => {
             </div>
         </nav>
     );
-};
-export default Header;
+}

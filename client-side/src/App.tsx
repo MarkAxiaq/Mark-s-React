@@ -1,19 +1,24 @@
 import * as React from "react";
 import "./App.css";
-import Footer from "./components/common/footer/footer";
-import Header from "./components/common/header/header";
-import SideBar from "./components/common/sideBar/sideBar";
+import {Header, Footer, SideBar} from "./components/common";
 import Routes from "./routes";
+import ApolloClient from "apollo-boost";
+import {ApolloProvider} from "react-apollo";
 
 // Importing Font Awesome icons here
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faBriefcase, faEllipsisV, faHome } from '@fortawesome/free-solid-svg-icons';
 library.add(faEllipsisV, faHome, faBriefcase)
 
+// Setup Apollo Client
+const client = new ApolloClient({
+    uri: "http://localhost:4321/graphql"
+})
+
 class App extends React.Component {
     public render() {
         return (
-            <div className="App">
+            <ApolloProvider client={client}>
                 <Header />
                 <div className="wrapper">
                     <SideBar />
@@ -22,7 +27,7 @@ class App extends React.Component {
                     </div>
                 </div>
                 <Footer />
-            </div>
+            </ApolloProvider>
         );
     }
 }

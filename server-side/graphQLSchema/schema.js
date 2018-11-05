@@ -4,7 +4,7 @@ const UserModel = require('../mongoDBModels/user.model');
 const WebsiteModel = require('../mongoDBModels/website.model');
 
 //ES6 Distructure - Grabbing a variable from something else. In this case grabbing GraphQLObjectType and others from graphql
-const {GraphQLObjectType, GraphQLString, GraphQLID, GraphQLSchema, GraphQLList, GraphQLBoolean, GraphQLInt} = graphql;
+const {GraphQLObjectType, GraphQLString, GraphQLID, GraphQLSchema, GraphQLList, GraphQLBoolean, GraphQLInt, GraphQLNonNull} = graphql;
 
 // WebsiteType is now a GraphQl Object
 const WebsiteType = new GraphQLObjectType({
@@ -76,7 +76,7 @@ const Mutation = new GraphQLObjectType({
         addWebsite:{
             type: WebsiteType,
             args:{
-                name: {type: GraphQLString}
+                name: {type: new GraphQLNonNull(GraphQLString)}
             },
             resolve(parent, args){
                 let website = new WebsiteModel({
@@ -86,15 +86,36 @@ const Mutation = new GraphQLObjectType({
                 return website.save();
             }
         },
+        updateWebsite:{
+            type: WebsiteType,
+            args:{
+                id: {type: new GraphQLNonNull(GraphQLID)},
+                name: {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve(parent, args){
+                console.log(args)
+                return {name: "ok", id: "ok"}
+            }
+        },
+        deleteWebsite:{
+            type: WebsiteType,
+            args:{
+                id: {type: new GraphQLNonNull(GraphQLID)}
+            },
+            resolve(parent, args){
+                console.log(args)
+                return {name: "ok", id: "ok"}
+            }
+        },
         addUser:{
             type: UserType,
             args:{
-                name: {type: GraphQLString},
-                email: {type: GraphQLString},
-                age: {type: GraphQLInt},
-                contactNumber: {type: GraphQLInt},
-                admin: {type: GraphQLBoolean},
-                websiteId: {type: new GraphQLList(GraphQLID)}
+                name: {type: GraphQLNonNull(GraphQLString)},
+                email: {type: GraphQLNonNull(GraphQLString)},
+                age: {type: GraphQLNonNull(GraphQLInt)},
+                contactNumber: {type: GraphQLNonNull(GraphQLInt)},
+                admin: {type: GraphQLNonNull(GraphQLBoolean)},
+                websiteId: {type: GraphQLNonNull(new GraphQLList(GraphQLID))}
             },
             resolve(parent, args){
                 let user = new UserModel({
