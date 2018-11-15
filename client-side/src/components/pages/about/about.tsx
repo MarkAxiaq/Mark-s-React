@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "./about.scss"
+import "./about.css"
 
 export default (props: object) =>
     <div id="aboutPage">

@@ -4,69 +4,46 @@ import {getAllWebsites, addWebsite, updateWebsite, deleteWebsite} from "../../..
 import {IWebsiteProps, IWebsite} from "../../../models/websites.interface";
 import {NameEditDelete} from "../../common/index";
 import {Formik, Form, Field, ErrorMessage} from "formik";
-import * as Yup from "yup";
-import "./websites.scss";
-
-const initialValues ={
-    name: '',
-    surname: ''
-}
-
-const SignupSchema = Yup.object().shape({
-    name: Yup.string()
-        .min(2, 'Too Short!')
-        .max(70, 'Too Long!')
-        .required('Required'),
-    surname: Yup.string()
-        .min(2, 'Too Short!')
-        .max(70, 'Too Long!')
-        .required('Required'),
-});
-
+import {AddWebsiteSchema, AddWebsiteValues} from '../../../formsSchema/addWebsite.schema';
+import {Button, FormGroup, Input, FormFeedback, Col} from 'reactstrap';
 
 class Websites extends React.Component<IWebsiteProps, {}> {
     constructor(props: any) {
         super(props);
 
-        this.state = {
-            isGoing: true,
-            numberOfGuests: 2
-        };
-
-        this.onConfirm = this.onConfirm.bind(this);
+        this.renderContent = this.renderContent.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
     }
 
     public render() {
         return (
             <div id="websitesPage">
-                <h1>Websites</h1>
-                {this.renderContent()}
-
+                <h4>Add a new Website</h4>
                 <Formik
-                    initialValues={initialValues}
-                    validationSchema={SignupSchema}
+                    initialValues={AddWebsiteValues}
+                    validationSchema={AddWebsiteSchema}
                     onSubmit={this.onSubmit}>
-                    {({isSubmitting}) => (
+                    {({isSubmitting, errors, touched}) => (
                         <Form>
-                            <Field type="text" name="name" />
-                            <ErrorMessage name="name" />
-                            <Field type="text" name="surname" />
-                            <ErrorMessage name="surname" />
-                            <button className='btn btn-success' type='submit' disabled={isSubmitting}>Submit</button>
+                            <FormGroup row={true}>
+                                <Col sm="4">
+                                    <Input type="text" name="websiteName" placeholder="Website Name"
+                                           tag={Field}
+                                           invalid={errors.websiteName && touched.websiteName} />
+                                    <FormFeedback><ErrorMessage name="websiteName" /></FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <Button color="success" type='submit' disabled={isSubmitting}>Submit</Button>
                         </Form>
                     )}
                 </Formik>
+                <br/>
+                <h4>All Websites</h4>
+                {this.renderContent()}
             </div>
         );
-    }
-
-
-    private onSubmit = (formValues, actions) => {
-        setTimeout(() =>{
-            alert(JSON.stringify(formValues, null, 2));
-            actions.setSubmitting(false)
-        }, 1000);
     }
 
     private renderContent = () => {
@@ -81,9 +58,10 @@ class Websites extends React.Component<IWebsiteProps, {}> {
                 return (
                     <div key={item.id}>
                         <NameEditDelete
+                            usedFor = 'website'
                             id={item.id}
                             name={item.name}
-                            onConfirm={this.onConfirm}
+                            onEdit={this.onEdit}
                             onDelete={this.onDelete}
                         />
                     </div>
@@ -96,7 +74,25 @@ class Websites extends React.Component<IWebsiteProps, {}> {
         }
     }
 
-    private onConfirm = newData => {
+    private onSubmit = (formValues, actions) => {
+        this.props.addWebsite({
+            variables: {
+                name: formValues.websiteName
+            },
+            refetchQueries:[{query: getAllWebsites}]
+        }).then((res: any) => {
+            if(res.data.addWebsite.name){
+                console.log(res.data);
+                console.log(`${formValues.websiteName} was added successfully to Websites`);
+                actions.setSubmitting(false);
+                formValues.websiteName = '';
+            }
+        }).catch(e => {
+            console.log(`onConfirm - Error: ${e}`);
+        });
+    }
+
+    private onEdit = newData => {
         this.props.updateWebsite({
             variables: {
                 id: newData.id,

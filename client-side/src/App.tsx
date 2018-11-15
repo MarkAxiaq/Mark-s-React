@@ -7,8 +7,8 @@ import {ApolloProvider} from "react-apollo";
 
 // Importing Font Awesome icons here
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBriefcase, faEllipsisV, faHome } from '@fortawesome/free-solid-svg-icons';
-library.add(faEllipsisV, faHome, faBriefcase)
+import { faBriefcase, faEllipsisV, faHome, faDesktop} from '@fortawesome/free-solid-svg-icons';
+library.add(faEllipsisV, faHome, faBriefcase, faDesktop)
 
 // Setup Apollo Client
 const client = new ApolloClient({

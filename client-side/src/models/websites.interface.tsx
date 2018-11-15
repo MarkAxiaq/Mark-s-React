@@ -4,9 +4,8 @@ interface IWebsiteProps {
     updateWebsite: (object) => Promise<object>
     deleteWebsite: (object) => Promise<object>
 }
-// interface IWebsiteState {
-//
-// };
+
+// interface IWebsiteState {};
 
 interface IWebsite {
     id: string,

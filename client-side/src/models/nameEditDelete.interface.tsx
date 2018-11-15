@@ -1,7 +1,8 @@
 interface INameEditDeleteProps {
+    usedFor: string,
     id: string,
     name:string,
-    onConfirm: (parameter: IEditedData) => void
+    onEdit: (parameter: IEditedData) => void
     onDelete: (parameter: string) => void
 };
 

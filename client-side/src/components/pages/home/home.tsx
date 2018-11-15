@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "./home.scss";
+import "./home.css";
 
 export default (props: object) =>
     <div id="homePage">

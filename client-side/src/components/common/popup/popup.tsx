@@ -1,7 +1,8 @@
 import * as React from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup } from 'reactstrap';
+import {IPopupProps, IPopupState} from '../../../models/popup.interface';
 
-class ModalExample extends React.Component<{id, buttonLabel, title, content, redBtnText, greenBtnText, onConfirm}, {modal}> {
+class Popup extends React.Component<IPopupProps, IPopupState> {
     constructor(props) {
         super(props);
         this.state = {
@@ -22,21 +23,23 @@ class ModalExample extends React.Component<{id, buttonLabel, title, content, red
                         {this.props.content}
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" onClick={this.toggle}>{this.props.redBtnText}</Button>
-                        <Button color="success" onClick={this.confirm}>{this.props.greenBtnText}</Button>{' '}
+                        <ButtonGroup>
+                            <Button color="warning" onClick={this.toggle}>{this.props.orangeBtnText}</Button>
+                            <Button color="success" onClick={this.confirm}>{this.props.greenBtnText}</Button>
+                        </ButtonGroup>
                     </ModalFooter>
                 </Modal>
             </React.Fragment>
         );
     }
 
-    public toggle() {
+    private toggle(): void {
         this.setState({
             modal: !this.state.modal
         });
     }
 
-    private confirm() {
+    private confirm(): void {
         this.setState({
             modal: !this.state.modal
         });
@@ -44,4 +47,4 @@ class ModalExample extends React.Component<{id, buttonLabel, title, content, red
     }
 }
 
-export default ModalExample;
+export default Popup;
