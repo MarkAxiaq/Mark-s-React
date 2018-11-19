@@ -61,8 +61,7 @@ class NameEditDelete extends React.Component<INameEditDeleteProps, INameEditDele
     };
 
     private readonly onChange = (event): void =>  {
-        const newState = Object.assign(this.state, {editedName: event.target.value});
-        this.setState(newState);
+        this.setState({editedName: event.target.value});
     };
 
     private readonly onEditConfirm = (): void =>  {

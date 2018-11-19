@@ -5,11 +5,13 @@ import App from "./App";
 import "./index.css";
 import registerServiceWorker from "./registerServiceWorker";
 
-
 // Bootstrap
-import 'bootstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap/dist/js/bootstrap.min.js';
+
+// Importing Font Awesome icons here
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBriefcase, faHome, faDesktop} from '@fortawesome/free-solid-svg-icons';
+library.add(faHome, faBriefcase, faDesktop)
 
 ReactDOM.render(<Router><App /></Router>, document.getElementById("root") as HTMLElement);
 registerServiceWorker();

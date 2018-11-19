@@ -1,46 +1,68 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import * as React from "react";
-// import logo from "../../../assets/images/logo.svg"
 import {Link} from 'react-router-dom';
+import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem } from 'reactstrap';
 
-import "./header.css";
+export default class Header extends React.Component<{}, {isOpen}> {
+    constructor(props) {
+        super(props);
 
-export default () => {
-
-    const toggleSideMenu = () => {
-        const sideBar = document.getElementById("sidebar");
-        if(sideBar) {
-            sideBar.classList.toggle("active")
-        }
+        this.toggle = this.toggle.bind(this);
+        this.state = {isOpen: false};
     }
 
-    return (
-        <nav id="header" className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a className="navbar-brand" href="#" onClick={toggleSideMenu}>
-                <FontAwesomeIcon icon="ellipsis-v" className="sideMenu" />
-                <strong> Web Trend BO</strong>
-                {/*<img src={logo} className="App-logo" alt="logo" />*/}
-            </a>
-            <button className="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"/>
-            </button>
-
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav mr-auto">
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/about">About</Link>
-                    </li>
-                </ul>
-                <form className="form-inline my-2 my-lg-0">
-                    <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-                    <button className="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-                </form>
+    public render() {
+        return (
+            <div>
+                <Navbar color="dark" dark={true} expand="md">
+                    <NavbarBrand href="/">BLACK OFFICE</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar={true}>
+                        <Nav navbar={true}>
+                            <NavItem>
+                                <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
+                            </NavItem>
+                            <NavItem>
+                                <Link className="nav-link" to="/about">About</Link>
+                            </NavItem>
+                        </Nav>
+                        <Nav className="ml-auto" navbar={true}>
+                            <UncontrolledDropdown nav={true} inNavbar={true}>
+                                <DropdownToggle nav={true} caret={true}>
+                                    Logged In ???
+                                </DropdownToggle>
+                                <DropdownMenu right={true}>
+                                    <DropdownItem>
+                                        My Profile
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        Change Password
+                                    </DropdownItem>
+                                    <DropdownItem divider={true} />
+                                    <DropdownItem>
+                                        Log Out
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </UncontrolledDropdown>
+                        </Nav>
+                    </Collapse>
+                </Navbar>
             </div>
-        </nav>
-    );
+        );
+    }
+
+    private toggle() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    }
 }

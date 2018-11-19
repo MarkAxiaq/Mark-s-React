@@ -2,16 +2,14 @@ import * as React from "react";
 import {graphql, compose} from "react-apollo";
 import {getAllWebsites, addWebsite, updateWebsite, deleteWebsite} from "../../../graphQlSchema/websites.schema";
 import {IWebsiteProps, IWebsite} from "../../../models/websites.interface";
-import {NameEditDelete} from "../../common/index";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import {NameEditDelete, FormikForm} from "../../common/index";
 import {AddWebsiteSchema, AddWebsiteValues} from '../../../formsSchema/addWebsite.schema';
-import {Button, FormGroup, Input, FormFeedback, Col} from 'reactstrap';
 
 class Websites extends React.Component<IWebsiteProps, {}> {
     constructor(props: any) {
         super(props);
 
-        this.renderContent = this.renderContent.bind(this);
+        this.getWebsites = this.getWebsites.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
@@ -21,32 +19,18 @@ class Websites extends React.Component<IWebsiteProps, {}> {
         return (
             <div id="websitesPage">
                 <h4>Add a new Website</h4>
-                <Formik
+                <FormikForm
                     initialValues={AddWebsiteValues}
                     validationSchema={AddWebsiteSchema}
-                    onSubmit={this.onSubmit}>
-                    {({isSubmitting, errors, touched}) => (
-                        <Form>
-                            <FormGroup row={true}>
-                                <Col sm="4">
-                                    <Input type="text" name="websiteName" placeholder="Website Name"
-                                           tag={Field}
-                                           invalid={errors.websiteName && touched.websiteName} />
-                                    <FormFeedback><ErrorMessage name="websiteName" /></FormFeedback>
-                                </Col>
-                            </FormGroup>
-                            <Button color="success" type='submit' disabled={isSubmitting}>Submit</Button>
-                        </Form>
-                    )}
-                </Formik>
+                    onSubmit={this.onSubmit}/>
                 <br/>
                 <h4>All Websites</h4>
-                {this.renderContent()}
+                {this.getWebsites()}
             </div>
         );
     }
 
-    private renderContent = () => {
+    private getWebsites = () => {
         const {loading, websites, error} = this.props.getAllWebsites as any;
 
         if (loading) {

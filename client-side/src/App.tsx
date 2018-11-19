@@ -5,11 +5,6 @@ import Routes from "./routes";
 import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "react-apollo";
 
-// Importing Font Awesome icons here
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBriefcase, faEllipsisV, faHome, faDesktop} from '@fortawesome/free-solid-svg-icons';
-library.add(faEllipsisV, faHome, faBriefcase, faDesktop)
-
 // Setup Apollo Client
 const client = new ApolloClient({
     uri: "http://localhost:4321/graphql"
@@ -20,10 +15,14 @@ class App extends React.Component {
         return (
             <ApolloProvider client={client}>
                 <Header />
-                <div className="wrapper">
-                    <SideBar />
-                    <div id="content">
-                        <Routes />
+                <div className="container-fluid footerHeight">
+                    <div className="row">
+                        <div id="sideBar" className="col-1">
+                            <SideBar />
+                        </div>
+                        <div id="content" className="col-11">
+                            <Routes />
+                        </div>
                     </div>
                 </div>
                 <Footer />
