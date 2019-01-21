@@ -57,7 +57,7 @@ class NameEditDelete extends React.Component<INameEditDeleteProps, INameEditDele
     private readonly onEdit = (): void =>  {
         this.setState({
             disabled: !this.state.disabled
-        })
+        });
     };
 
     private readonly onChange = (event): void =>  {
@@ -66,6 +66,7 @@ class NameEditDelete extends React.Component<INameEditDeleteProps, INameEditDele
 
     private readonly onEditConfirm = (): void =>  {
         this.props.onEdit({id: this.props.id, name: this.state.editedName});
+        this.onEdit();
     };
 
     private readonly onDelete = (): void =>  {

@@ -84,8 +84,8 @@ class Websites extends React.Component<IWebsiteProps, {}> {
             },
             refetchQueries:[{query: getAllWebsites}]
         }).then((res: any) => {
-            if(res.data){
-                console.log(`${newData.name} was updated successfully to ${res.data.name}`);
+            if(res.data.updateWebsite.id){
+                console.log(`${res.data.updateWebsite.name} was updated successfully to ${newData.name}`);
             }
         }).catch(e => {
             console.log(`onConfirm - Error: ${e}`);
@@ -99,8 +99,8 @@ class Websites extends React.Component<IWebsiteProps, {}> {
             },
             refetchQueries:[{query: getAllWebsites}]
         }).then((res: any) => {
-            if(res.data){
-                console.log(`${res.data.name} was deleted successfully`);
+            if(res.data.deleteWebsite.id){
+                console.log(`${res.data.deleteWebsite.name} was deleted successfully`);
             }
         }).catch(e => {
             console.log(`onDelete - Error: ${e}`);
