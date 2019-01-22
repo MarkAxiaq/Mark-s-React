@@ -1,6 +1,6 @@
 import * as React from "react";
 import {graphql, compose} from "react-apollo";
-import {getAllWebsites, addWebsite, updateWebsite, deleteWebsite} from "../../../graphQlSchema/websites.schema";
+import {getAllWebsites, addWebsite, updateWebsite, deleteWebsite} from "../../../graphQlQueries/websites.schema";
 import {IWebsiteProps, IWebsite} from "../../../models/websites.interface";
 import {NameEditDelete, FormikForm} from "../../common/index";
 import {AddWebsiteSchema, AddWebsiteValues} from '../../../formsSchema/addWebsite.schema';

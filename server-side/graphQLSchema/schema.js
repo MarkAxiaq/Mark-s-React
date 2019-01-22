@@ -37,11 +37,24 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLList(WebsiteType),
       resolve(parent, args) {
         // if admin returns all websites else return the websites associated with the user
-        return parent.admin
-          ? WebsiteModel.find({})
-          : WebsiteModel.find({ _id: { $in: parent.websiteId } });
+        try {
+          return parent.admin
+            ? WebsiteModel.find({})
+            : WebsiteModel.find({ _id: { $in: parent.websiteId } });
+        }
+        catch(e){
+          console.log(e)
+        }
       }
     }
+  })
+});
+
+const UserLoginType = new GraphQLObjectType({
+  name: 'UserLogin',
+  fields: () => ({
+    success: {type: GraphQLBoolean},
+    token: {type: GraphQLString}
   })
 });
 
@@ -177,7 +190,26 @@ const Mutation = new GraphQLObjectType({
            console.log(e)
         }
       }
+    },
+
+
+    userLogin: {
+      type: UserLoginType,
+      args: {
+        email: { type: GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        try {
+          console.log(args)
+          return {success: true, token: 'Mark'}
+        }
+        catch(e){
+          console.log(e)
+        }
+      }
     }
+
   }
 });
 

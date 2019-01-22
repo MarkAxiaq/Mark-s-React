@@ -1,18 +1,17 @@
 import * as React from "react";
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {
     Collapse,
     Navbar,
     NavbarToggler,
     NavbarBrand,
     Nav,
-    NavItem,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem } from 'reactstrap';
+    NavItem} from 'reactstrap';
+import AuthHelperMethods from "../../../helpers/auth/authHelperMethods";
 
-export default class Header extends React.Component<{}, {isOpen}> {
+const Auth = new AuthHelperMethods();
+
+class Header extends React.Component<{history}, {isOpen}> {
     constructor(props) {
         super(props);
 
@@ -27,32 +26,8 @@ export default class Header extends React.Component<{}, {isOpen}> {
                     <NavbarBrand href="/">BLACK OFFICE</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar={true}>
-                        <Nav navbar={true}>
-                            <NavItem>
-                                <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
-                            </NavItem>
-                            <NavItem>
-                                <Link className="nav-link" to="/about">About</Link>
-                            </NavItem>
-                        </Nav>
                         <Nav className="ml-auto" navbar={true}>
-                            <UncontrolledDropdown nav={true} inNavbar={true}>
-                                <DropdownToggle nav={true} caret={true}>
-                                    Logged In ???
-                                </DropdownToggle>
-                                <DropdownMenu right={true}>
-                                    <DropdownItem>
-                                        My Profile
-                                    </DropdownItem>
-                                    <DropdownItem>
-                                        Change Password
-                                    </DropdownItem>
-                                    <DropdownItem divider={true} />
-                                    <DropdownItem>
-                                        Log Out
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </UncontrolledDropdown>
+                            { this.loggedInOrOut()}
                         </Nav>
                     </Collapse>
                 </Navbar>
@@ -65,4 +40,39 @@ export default class Header extends React.Component<{}, {isOpen}> {
             isOpen: !this.state.isOpen
         });
     }
+
+    private loggedInOrOut = () => {
+        if(Auth.loggedIn()) {
+            // const userProfile = Auth.getProfile();
+            // Add any menu items that should be visible when the user is logged in
+            return (
+                <>
+                    <NavItem>
+                        <Link className="nav-link" to="/home">Home</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link className="nav-link" to="/about">About</Link>
+                    </NavItem>
+                    {/*<p className="nav-link">Welcome {userProfile.name}</p>*/}
+                    <NavItem>
+                        <p className="nav-link" onClick={this.logout}>Log Out</p>
+                    </NavItem>
+                </>
+            )
+        } else {
+            // Add any menu items that should be visible when the user is logged out
+            return (
+                <NavItem >
+                    <Link className="nav-link" to="/">Login</Link>
+                </NavItem>
+            )
+        }
+    }
+
+    private logout = () => {
+        Auth.logout();
+        this.props.history.push("/");
+    }
 }
+
+export default withRouter(Header);
