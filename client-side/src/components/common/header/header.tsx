@@ -43,7 +43,7 @@ class Header extends React.Component<{history}, {isOpen}> {
 
     private loggedInOrOut = () => {
         if(Auth.loggedIn()) {
-            // const userProfile = Auth.getProfile();
+            const userProfile = Auth.getProfile();
             // Add any menu items that should be visible when the user is logged in
             return (
                 <>
@@ -53,7 +53,7 @@ class Header extends React.Component<{history}, {isOpen}> {
                     <NavItem>
                         <Link className="nav-link" to="/about">About</Link>
                     </NavItem>
-                    {/*<p className="nav-link">Welcome {userProfile.name}</p>*/}
+                    <p className="nav-link">Welcome {userProfile.name} {userProfile.surname}</p>
                     <NavItem>
                         <p className="nav-link" onClick={this.logout}>Log Out</p>
                     </NavItem>

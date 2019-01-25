@@ -1,6 +1,7 @@
 const graphql = require('graphql');
 const UserModel = require('../mongoDBModels/user.model');
 const WebsiteModel = require('../mongoDBModels/website.model');
+const JWT = require("jsonwebtoken");
 
 //ES6 Distructure - Grabbing a variable from something else. In this case grabbing GraphQLObjectType and others from graphql
 const {
@@ -201,8 +202,13 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args) {
         try {
-          console.log(args)
-          return {success: true, token: 'Mark'}
+
+          // TODO: Password decode and search if user exists and if password is correct
+          // console.log(args)
+          // user.findOne({email: args.email, password: args.password})
+
+          const token = JWT.sign({name: "Mark", surname: "Axiaq"}, 'MarkPassPhraseToChange', {expiresIn: "8h"});
+          return {success: true, token: token}
         }
         catch(e){
           console.log(e)
