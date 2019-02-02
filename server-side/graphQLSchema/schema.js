@@ -2,6 +2,8 @@ const graphql = require('graphql');
 const UserModel = require('../mongoDBModels/user.model');
 const WebsiteModel = require('../mongoDBModels/website.model');
 const JWT = require("jsonwebtoken");
+const passwordHash = require('password-hash');
+const _ = require('lodash');
 
 //ES6 Distructure - Grabbing a variable from something else. In this case grabbing GraphQLObjectType and others from graphql
 const {
@@ -15,6 +17,16 @@ const {
   GraphQLNonNull
 } = graphql;
 
+// WebsiteResponseType is now a GraphQl Object
+const WebsiteResponseType = new GraphQLObjectType({
+  name: 'WebsiteResponse',
+  fields: () => ({
+    success: { type: GraphQLBoolean },
+    message: {type: GraphQLString},
+    website: {type: WebsiteType},
+  })
+});
+
 // WebsiteType is now a GraphQl Object
 const WebsiteType = new GraphQLObjectType({
   name: 'Website',
@@ -25,11 +37,31 @@ const WebsiteType = new GraphQLObjectType({
   })
 });
 
+const UserLoginType = new GraphQLObjectType({
+  name: 'UserLogin',
+  fields: () => ({
+    success: {type: GraphQLBoolean},
+    message: {type: GraphQLString},
+    token: {type: GraphQLString}
+  })
+});
+
+// TODO: change user to token
+const AddUserType = new GraphQLObjectType({
+  name: 'AddUser',
+  fields: () => ({
+    success: { type: GraphQLBoolean },
+    message: {type: GraphQLString},
+    user: {type: UserType}
+  })
+});
+
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
+    surname: { type: GraphQLString },
     email: { type: GraphQLString },
     age: { type: GraphQLInt },
     contactNumber: { type: GraphQLInt },
@@ -48,14 +80,6 @@ const UserType = new GraphQLObjectType({
         }
       }
     }
-  })
-});
-
-const UserLoginType = new GraphQLObjectType({
-  name: 'UserLogin',
-  fields: () => ({
-    success: {type: GraphQLBoolean},
-    token: {type: GraphQLString}
   })
 });
 
@@ -118,77 +142,121 @@ const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
     addWebsite: {
-      type: WebsiteType,
+      type: WebsiteResponseType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parent, args) {
-        let website = new WebsiteModel({
-          name: args.name
-        });
-        // save is a function from mongoose to save to MongoDB - (WebsiteModel is a mongoose model, that's why save is available)
         try {
-            return website.save();
+          const website = WebsiteModel.findOne({name: args.name});
+          return website.then(website => {
+            if(website){
+              return {success: false, message: 'A website with the same name already exist'};
+            }
+
+            let newWebsite = new WebsiteModel({
+              name: args.name
+            });
+
+            return {success: true, message: 'Website added successfully', website: newWebsite.save()};
+          });
         }
-        catch(e){
-           console.log(e)
+        catch(e) {
+          console.log(e)
+          return {success:false, message: e}
         }
       }
     },
     updateWebsite: {
-      type: WebsiteType,
+      type: WebsiteResponseType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parent, args) {
         try {
-            return WebsiteModel.findOneAndUpdate({_id: args.id}, {name: args.name});
+          const website = WebsiteModel.findOne({name: args.name});
+          return website.then(website => {
+            if(website){
+              return {success: false, message: 'A website with the same name already exist'};
+            }
+
+            return {
+              success: true,
+              message: 'Website updated successfully',
+              website: WebsiteModel.findOneAndUpdate({_id: args.id}, {name: args.name})
+            };
+          });
         }
-        catch(e){
-           console.log(e)
+        catch(e) {
+          console.log(e)
+          return {success:false, message: e}
         }
       }
     },
     deleteWebsite: {
-      type: WebsiteType,
+      type: WebsiteResponseType,
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) }
       },
       resolve(parent, args) {
         try {
-            return WebsiteModel.findOneAndDelete({_id: args.id});
+          const website = WebsiteModel.findOne({_id: args.id});
+          return website.then(website => {
+            if(!website){
+              return {success: false, message: 'Website ID is incorrect'};
+            }
+
+            return {
+              success: true,
+              message: 'Website deleted successfully',
+              website: WebsiteModel.findOneAndDelete({_id: args.id})
+            };
+          });
         }
-        catch(e){
-           console.log(e)
+        catch(e) {
+          console.log(e)
+          return {success:false, message: e}
         }
       }
     },
     addUser: {
-      type: UserType,
+      type: AddUserType,
       args: {
         name: { type: GraphQLNonNull(GraphQLString) },
+        surname: { type: GraphQLNonNull(GraphQLString) },
         email: { type: GraphQLNonNull(GraphQLString) },
+        password: { type: GraphQLNonNull(GraphQLString) },
         age: { type: GraphQLNonNull(GraphQLInt) },
         contactNumber: { type: GraphQLNonNull(GraphQLInt) },
         admin: { type: GraphQLNonNull(GraphQLBoolean) },
         websiteId: { type: GraphQLNonNull(new GraphQLList(GraphQLID)) }
       },
       resolve(parent, args) {
-        let user = new UserModel({
-          name: args.name,
-          email: args.email,
-          age: args.age,
-          contactNumber: args.contactNumber,
-          admin: args.admin,
-          websiteId: args.websiteId
-        });
-
         try {
-            return user.save();
+          const user = UserModel.findOne({email: args.email});
+          return user.then(user => {
+            if(user){
+              return {success: false, message: 'A user with the same email already exist'};
+            }
+
+            let newUser = new UserModel({
+                name: args.name,
+                surname: args.surname,
+                email: args.email,
+                password: passwordHash.generate(args.password),
+                age: args.age,
+                contactNumber: args.contactNumber,
+                admin: args.admin,
+                websiteId: args.websiteId
+              });
+
+            return {success: true, user: newUser.save()};
+          });
         }
-        catch(e){
+        catch(e) {
            console.log(e)
+           return {success:false, message: e}
         }
       }
     },
@@ -202,15 +270,24 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args) {
         try {
+          const user = UserModel.findOne({email: args.email});
+          return user.then(user => {
 
-          // TODO: Password decode and search if user exists and if password is correct
-          // console.log(args)
-          // user.findOne({email: args.email, password: args.password})
+            if (!user) {
+              return {success: false, message: 'User does not exist'};
+            }
 
-          const token = JWT.sign({name: "Mark", surname: "Axiaq"}, 'MarkPassPhraseToChange', {expiresIn: "8h"});
-          return {success: true, token: token}
+            if(user && !passwordHash.verify(args.password, user.password)) {
+              return {success: false, message: 'Incorrect Password'};
+            }
+
+            // Include only necessary properties to return
+            const userProperties = _.pick(user, ['name', 'email', 'age', 'contactNumber', 'admin', 'websiteId']);
+            const token = JWT.sign(userProperties, 'MarkPassPhraseToChange', {expiresIn: "8h"});
+            return {success: true, token: token};
+          });
         }
-        catch(e){
+        catch(e) {
           console.log(e)
         }
       }

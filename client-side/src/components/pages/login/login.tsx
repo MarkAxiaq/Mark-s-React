@@ -3,17 +3,26 @@ import { Button, FormGroup, Label, Input, FormFeedback} from 'reactstrap';
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import AuthHelperMethods from "../../../helpers/auth/authHelperMethods";
 import {graphql, compose} from 'react-apollo';
-import {userLogin} from '../../../graphQlQueries/login.schema';
-import {loginFormValues, LoginFormSchema} from "../../../formsSchema/login.schema";
+import {userLogin} from './loginGraphQL.schema';
+import {loginFormValues, LoginFormSchema} from "./loginFormikForm.schema";
+import {ShowAlert} from "../../common/index";
+import {ILoginState} from "./login.interface";
 
 const Auth = new AuthHelperMethods();
 
-class Login extends React.Component<any, any> {
+class Login extends React.Component<any, ILoginState> {
 
     constructor(props: any){
         super(props)
 
+        this.state = {
+            loginFormMessage: '',
+            alertPosition: 'alertMargin',
+            alertColor: 'danger',
+        }
+
         this.onSubmit = this.onSubmit.bind(this);
+        this.showLoginFormMessage = this.showLoginFormMessage.bind(this);
     }
 
     public componentWillMount(){
@@ -47,6 +56,7 @@ class Login extends React.Component<any, any> {
                                         <FormFeedback><ErrorMessage name="password"/></FormFeedback>
                                     </FormGroup>
                                     <Button type='submit' disabled={isSubmitting}>Submit</Button>
+                                    {this.showLoginFormMessage()}
                                 </Form>
                             )}
                         </Formik>
@@ -57,29 +67,36 @@ class Login extends React.Component<any, any> {
     }
 
     private onSubmit = (formValues, actions) => {
-        setTimeout(() =>{
-            actions.setSubmitting(false)
-            console.log(formValues)
+        this.setState({loginFormMessage: ''});
+        actions.setSubmitting(false);
+        this.props.userLogin({
+            variables: {
+                email: formValues.email,
+                password: formValues.password
+            }
+        }).then(res => {
+            if(res.data && res.data.userLogin.success){
+                Auth.setToken(res.data.userLogin.token);
+                this.props.history.push('/home');
+            } else {
+                this.setState({loginFormMessage: res.data.userLogin.message})
+            }
+        }).catch(e => {
+            this.setState({loginFormMessage: `${e}`});
+            console.log(`loginPage >> onUserLogin >> onSubmit >> ${e}`);
+        });
+    };
 
-            this.props.userLogin({
-                variables: {
-                    email: formValues.email,
-                    password: formValues.password
-                }
-            }).then(res => {
-
-                console.log(res)
-                console.log(res)
-                console.log(res)
-
-                if(res.data && res.data.userLogin.success){
-                    Auth.setToken(res.data.userLogin.token);
-                    this.props.history.push('/home');
-                }
-            }).catch(e => {
-                console.log(`onUserLogin - Error: ${e}`);
-            });
-        }, 1000);
+    private showLoginFormMessage = () => {
+        if(this.state.loginFormMessage !== ''){
+            return (
+                <ShowAlert
+                    color={this.state.alertColor}
+                    message={this.state.loginFormMessage}
+                    position={this.state.alertPosition}/>
+            )
+        }
+        return null
     }
 }
 

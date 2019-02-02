@@ -5,6 +5,7 @@ const userLogin = gql`
         userLogin(email: $email, password: $password) {
             success
             token
+            message
         }
     }
 `;

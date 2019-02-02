@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Link, withRouter} from 'react-router-dom';
+import {IHeaderState} from "./header.interface";
 import {
     Collapse,
     Navbar,
@@ -11,12 +12,15 @@ import AuthHelperMethods from "../../../helpers/auth/authHelperMethods";
 
 const Auth = new AuthHelperMethods();
 
-class Header extends React.Component<{history}, {isOpen}> {
+class Header extends React.Component<{history}, IHeaderState> {
     constructor(props) {
         super(props);
 
-        this.toggle = this.toggle.bind(this);
         this.state = {isOpen: false};
+
+        this.toggle = this.toggle.bind(this);
+        this.loggedInOrOut = this.loggedInOrOut.bind(this);
+        this.logout = this.logout.bind(this);
     }
 
     public render() {
@@ -47,12 +51,6 @@ class Header extends React.Component<{history}, {isOpen}> {
             // Add any menu items that should be visible when the user is logged in
             return (
                 <>
-                    <NavItem>
-                        <Link className="nav-link" to="/home">Home</Link>
-                    </NavItem>
-                    <NavItem>
-                        <Link className="nav-link" to="/about">About</Link>
-                    </NavItem>
                     <p className="nav-link">Welcome {userProfile.name} {userProfile.surname}</p>
                     <NavItem>
                         <p className="nav-link" onClick={this.logout}>Log Out</p>

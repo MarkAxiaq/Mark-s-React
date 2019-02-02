@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonGroup } from 'reactstrap';
-import {IPopupProps, IPopupState} from '../../../models/popup.interface';
+import {IPopupProps, IPopupState} from './popup.interface';
 
 class Popup extends React.Component<IPopupProps, IPopupState> {
     constructor(props) {

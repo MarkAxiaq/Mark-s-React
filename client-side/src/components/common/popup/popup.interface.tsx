@@ -6,10 +6,10 @@ interface IPopupProps {
     orangeBtnText: string,
     greenBtnText: string,
     onConfirm: () => void
-};
+}
 
 interface IPopupState {
     modal: boolean
-};
+}
 
 export {IPopupProps, IPopupState}

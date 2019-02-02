@@ -12,8 +12,12 @@ const getAllWebsites = gql`
 const addWebsite = gql`
     mutation($name: String!){
         addWebsite(name: $name) {
-            id,
-            name
+            success,
+            message,
+            website {
+                id,
+                name,
+            }
         }
     }
 `;
@@ -21,8 +25,12 @@ const addWebsite = gql`
 const updateWebsite = gql`
     mutation($id:ID!, $name: String!){
         updateWebsite(id: $id, name: $name) {
-            id,
-            name
+            success,
+            message,
+            website {
+                id,
+                name,
+            }
         }
     }
 `;
@@ -30,8 +38,12 @@ const updateWebsite = gql`
 const deleteWebsite = gql`
     mutation($id:ID!){
         deleteWebsite(id: $id) {
-            id
-            name
+            success,
+            message,
+            website {
+                id,
+                name,
+            }
         }
     }
 `;

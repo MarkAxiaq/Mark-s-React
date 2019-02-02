@@ -1,5 +1,5 @@
 import * as React from "react";
-import {INameEditDeleteProps, INameEditDeleteState} from "../../../models/nameEditDelete.interface";
+import {INameEditDeleteProps, INameEditDeleteState} from "./nameEditDelete.interface";
 import {Popup} from "../index"
 import "./nameEditDelete.css";
 
