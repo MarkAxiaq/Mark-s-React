@@ -1,4 +1,5 @@
 Server side Application built with NodeJs, Express and GraphQl
+Using MLAB as a Database-as-a-Service for MongoDB + mongoose for database interaction. 
 
 To start the application using nodemon which will monitor all changes and restart the app on every change --> nodemon app
 

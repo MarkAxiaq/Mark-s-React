@@ -21,7 +21,6 @@ app.use("/graphql", graphqlHTTP({
     graphiql: true
 }));
 
-
 app.listen(4321, () => {
     console.log("Listening on Port 4321");
 });

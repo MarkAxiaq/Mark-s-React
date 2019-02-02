@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
 // Don't need to define the id property here. mLab is going to create id automatically
-const userModel = new Schema({
+const userMongoDBModel = new Schema({
     name: String,
     email: String,
     password: String,
@@ -14,4 +14,4 @@ const userModel = new Schema({
     }]
 });
 
-module.exports = mongoose.model('User', userModel)
+module.exports = mongoose.model('User', userMongoDBModel)

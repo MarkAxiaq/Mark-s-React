@@ -27,7 +27,7 @@ class Header extends React.Component<{history}, IHeaderState> {
         return (
             <div>
                 <Navbar color="dark" dark={true} expand="md">
-                    <NavbarBrand href="/">BLACK OFFICE</NavbarBrand>
+                    <NavbarBrand href="/">BACK OFFICE</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar={true}>
                         <Nav className="ml-auto" navbar={true}>
