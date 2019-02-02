@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const WebsitMongoeModel = require('./websiteMogoDB.model');
+const WebsiteMongoModel = require('./websiteMogoDB.model');
 const {WebsiteType, WebsiteResponseType}= require('./website.model');
 //ES6 Distructure - Grabbing a variable from something else. In this case grabbing GraphQLObjectType and others from graphql
 const {
@@ -45,13 +45,13 @@ const addWebsite = {
   },
   resolve(parent, args) {
     try {
-      const website = WebsitMongoeModel.findOne({name: args.name});
+      const website = WebsiteMongoModel.findOne({name: args.name});
       return website.then(website => {
         if(website){
           return {success: false, message: 'A website with the same name already exist'};
         }
 
-        let newWebsite = new WebsitMongoeModel({
+        let newWebsite = new WebsiteMongoModel({
           name: args.name
         });
 
@@ -73,7 +73,7 @@ const updateWebsite = {
   },
   resolve(parent, args) {
     try {
-      const website = WebsitMongoeModel.findOne({name: args.name});
+      const website = WebsiteMongoModel.findOne({name: args.name});
       return website.then(website => {
         if(website){
           return {success: false, message: 'A website with the same name already exist'};
@@ -82,7 +82,7 @@ const updateWebsite = {
         return {
           success: true,
           message: 'Website updated successfully',
-          website: WebsitMongoeModel.findOneAndUpdate({_id: args.id}, {name: args.name})
+          website: WebsiteMongoModel.findOneAndUpdate({_id: args.id}, {name: args.name})
         };
       });
     }
@@ -100,7 +100,7 @@ const deleteWebsite = {
   },
   resolve(parent, args) {
     try {
-      const website = WebsitMongoeModel.findOne({_id: args.id});
+      const website = WebsiteMongoModel.findOne({_id: args.id});
       return website.then(website => {
         if(!website){
           return {success: false, message: 'Website ID is incorrect'};
@@ -109,7 +109,7 @@ const deleteWebsite = {
         return {
           success: true,
           message: 'Website deleted successfully',
-          website: WebsitMongoeModel.findOneAndDelete({_id: args.id})
+          website: WebsiteMongoModel.findOneAndDelete({_id: args.id})
         };
       });
     }
