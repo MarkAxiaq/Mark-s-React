@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const AddWebsiteValues = {
-    name: ''
+    websiteName: ''
 }
 
 const WebsitesFormikFormSchema = Yup.object().shape({

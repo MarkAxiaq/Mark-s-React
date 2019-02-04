@@ -21,7 +21,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
         this.onEdit = this.onEdit.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.showWebsiteFormMessage = this.showWebsiteFormMessage.bind(this);
-    }
+    };
 
     public render() {
         return (
@@ -37,7 +37,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
                 {this.getWebsites()}
             </div>
         );
-    }
+    };
 
     private showWebsiteFormMessage = () => {
         if(this.state.websiteFormMessage !== ''){
@@ -49,7 +49,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
             )
         }
         return null
-    }
+    };
 
     private getWebsites = () => {
         const {loading, websites, error} = this.props.getAllWebsites as any;
@@ -77,7 +77,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
         if (error) {
             return <p>No Data...</p>
         }
-    }
+    };
 
     private onSubmit = (formValues, actions) => {
         this.setState({websiteFormMessage: ''});
@@ -107,7 +107,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
             });
             console.log(`websitesPage >> onAddWebsite >> onSubmit >> ${e}`);
         });
-    }
+    };
 
     private onEdit = newData => {
         this.setState({websiteFormMessage: ''});
@@ -136,7 +136,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
             });
             console.log(`websitesPage >> onEditWebsite >> onEdit >> ${e}`);
         });
-    }
+    };
 
     private onDelete = id => {
         this.setState({websiteFormMessage: ''});
@@ -164,7 +164,7 @@ class Websites extends React.Component<IWebsiteProps, IWebsiteState> {
             });
             console.log(`websitesPage >> onDeleteWebsite >> onDelete >> ${e}`);
         });
-    }
+    };
 }
 
 export default compose(

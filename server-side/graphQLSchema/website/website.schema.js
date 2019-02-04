@@ -16,7 +16,7 @@ const website = {
   resolve(parent, args) {
     // code to get data from MongoDB - findById is a mongoose function
     try {
-      return WebsitMongoeModel.findById(args.id);
+      return WebsiteMongoModel.findById(args.id);
     }
     catch(e){
       console.log(e)
@@ -28,7 +28,7 @@ const websites = {
   type: new GraphQLList(WebsiteType),
   resolve(parent, args) {
     try {
-      return WebsitMongoeModel.find({});
+      return WebsiteMongoModel.find({});
     }
     catch(e){
       console.log(e)
