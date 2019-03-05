@@ -22,7 +22,7 @@ class ShowAlert extends React.Component<IAlertProps, IAlertState> {
         );
     }
 
-    private onDismiss() {
+    public onDismiss() {
         this.setState({ visible: false });
     }
 }

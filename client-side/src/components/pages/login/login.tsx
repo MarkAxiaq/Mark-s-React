@@ -1,14 +1,12 @@
 import * as React from "react";
-import { Button, FormGroup, Label, Input, FormFeedback} from 'reactstrap';
+import {Button, FormGroup, Label, Input, FormFeedback} from 'reactstrap';
 import {Formik, Form, Field, ErrorMessage} from "formik";
-import AuthHelperMethods from "../../../helpers/auth/authHelperMethods";
+import {loggedIn, setToken } from "../../../helpers/auth/authHelperMethods";
 import {graphql, compose} from 'react-apollo';
 import {userLogin} from './loginGraphQL.schema';
 import {loginFormValues, LoginFormSchema} from "./loginFormikForm.schema";
 import {ShowAlert} from "../../common/index";
 import {ILoginState} from "./login.interface";
-
-const Auth = new AuthHelperMethods();
 
 class Login extends React.Component<any, ILoginState> {
 
@@ -26,7 +24,7 @@ class Login extends React.Component<any, ILoginState> {
     }
 
     public componentWillMount(){
-        if(Auth.loggedIn()) {
+        if(loggedIn()) {
             this.props.history.replace('/home');
         }
     }
@@ -76,7 +74,7 @@ class Login extends React.Component<any, ILoginState> {
             }
         }).then(res => {
             if(res.data && res.data.userLogin.success){
-                Auth.setToken(res.data.userLogin.token);
+                setToken(res.data.userLogin.token);
                 this.props.history.push('/home');
             } else {
                 this.setState({loginFormMessage: res.data.userLogin.message})

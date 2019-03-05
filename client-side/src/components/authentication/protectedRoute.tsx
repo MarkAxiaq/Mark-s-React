@@ -1,17 +1,14 @@
 import * as React from "react";
 import {Route, Redirect} from "react-router-dom";
-import AuthHelperMethods from '../../helpers/auth/authHelperMethods';
+import {loggedIn} from '../../helpers/auth/authHelperMethods';
 
 export const ProtectedRoute = ({component: Component, ...rest}) => {
-
-    const Auth = new AuthHelperMethods();
-
     return (
         <Route
             {...rest}
             render={props => {
 
-                if(Auth.loggedIn()) {
+                if(loggedIn()) {
                     return <Component {...props}/>;
                 } else {
                     return <Redirect to={

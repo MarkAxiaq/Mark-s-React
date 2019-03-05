@@ -8,11 +8,9 @@ import {
     NavbarBrand,
     Nav,
     NavItem} from 'reactstrap';
-import AuthHelperMethods from "../../../helpers/auth/authHelperMethods";
+import {loggedIn, getProfile, logout} from "../../../helpers/auth/authHelperMethods";
 
-const Auth = new AuthHelperMethods();
-
-class Header extends React.Component<{history}, IHeaderState> {
+class HeaderComponent extends React.Component<{history}, IHeaderState> {
     constructor(props) {
         super(props);
 
@@ -39,23 +37,23 @@ class Header extends React.Component<{history}, IHeaderState> {
         );
     }
 
-    private toggle() {
+    public toggle() {
         this.setState({
             isOpen: !this.state.isOpen
         });
     }
 
-    private loggedInOrOut = () => {
-        if(Auth.loggedIn()) {
-            const userProfile = Auth.getProfile();
+    public loggedInOrOut = () => {
+        if(loggedIn()) {
+            const userProfile = getProfile();
             // Add any menu items that should be visible when the user is logged in
             return (
-                <>
-                    <p className="nav-link">Welcome {userProfile.name} {userProfile.surname}</p>
+                <div>
+                    <p className="nav-link">Welcome {userProfile.name}</p>
                     <NavItem>
                         <p className="nav-link" onClick={this.logout}>Log Out</p>
                     </NavItem>
-                </>
+                </div>
             )
         } else {
             // Add any menu items that should be visible when the user is logged out
@@ -67,10 +65,11 @@ class Header extends React.Component<{history}, IHeaderState> {
         }
     }
 
-    private logout = () => {
-        Auth.logout();
+    public logout = () => {
+        logout();
         this.props.history.push("/");
     }
 }
 
-export default withRouter(Header);
+const Header = withRouter(HeaderComponent);
+export { Header, HeaderComponent };

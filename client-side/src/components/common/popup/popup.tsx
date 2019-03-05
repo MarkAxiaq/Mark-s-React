@@ -25,7 +25,7 @@ class Popup extends React.Component<IPopupProps, IPopupState> {
                     <ModalFooter>
                         <ButtonGroup>
                             <Button color="warning" onClick={this.toggle}>{this.props.orangeBtnText}</Button>
-                            <Button color="success" onClick={this.confirm}>{this.props.greenBtnText}</Button>
+                            <Button color="success" data-test='confirmButton' onClick={this.confirm}>{this.props.greenBtnText}</Button>
                         </ButtonGroup>
                     </ModalFooter>
                 </Modal>
@@ -33,13 +33,13 @@ class Popup extends React.Component<IPopupProps, IPopupState> {
         );
     }
 
-    private toggle(): void {
+    public toggle(): void {
         this.setState({
             modal: !this.state.modal
         });
     }
 
-    private confirm(): void {
+    public confirm(): void {
         this.setState({
             modal: !this.state.modal
         });
