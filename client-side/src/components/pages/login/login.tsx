@@ -8,7 +8,7 @@ import {loginFormValues, LoginFormSchema} from "./loginFormikForm.schema";
 import {ShowAlert} from "../../common/index";
 import {ILoginState} from "./login.interface";
 
-class Login extends React.Component<any, ILoginState> {
+class LoginComponent extends React.Component<any, ILoginState> {
 
     constructor(props: any){
         super(props)
@@ -25,7 +25,7 @@ class Login extends React.Component<any, ILoginState> {
 
     public componentWillMount(){
         if(loggedIn()) {
-            this.props.history.replace('/home');
+            this.props.history.push('/home');
         }
     }
 
@@ -64,7 +64,7 @@ class Login extends React.Component<any, ILoginState> {
         )
     }
 
-    private onSubmit = (formValues, actions) => {
+    public onSubmit = (formValues, actions) => {
         this.setState({loginFormMessage: ''});
         actions.setSubmitting(false);
         this.props.userLogin({
@@ -80,8 +80,8 @@ class Login extends React.Component<any, ILoginState> {
                 this.setState({loginFormMessage: res.data.userLogin.message})
             }
         }).catch(e => {
-            this.setState({loginFormMessage: `${e}`});
-            console.log(`loginPage >> onUserLogin >> onSubmit >> ${e}`);
+            this.setState({loginFormMessage: `${e.message}`});
+            console.log(`loginPage >> onUserLogin >> onSubmit >> ${e.message}`);
         });
     };
 
@@ -98,6 +98,8 @@ class Login extends React.Component<any, ILoginState> {
     }
 }
 
-export default  compose(
+const Login = compose(
     graphql(userLogin, {name: 'userLogin'})
-)(Login);
+)(LoginComponent);
+
+export {Login, LoginComponent}
