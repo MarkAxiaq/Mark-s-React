@@ -47,8 +47,8 @@ describe('HeaderComponent', () => {
     it('should render the correct content when loggedInOrOut is called and Auth.loggedIn return true', () => {
         const loggedInMock = jest.spyOn(Auth, 'loggedIn');
         loggedInMock.mockImplementation(() => true);
-        const getProfileMock = jest.spyOn(Auth, 'getProfile');
-        getProfileMock.mockImplementation(() => ({name: 'Mark'}));
+        const getUserMock = jest.spyOn(Auth, 'getUser');
+        getUserMock.mockImplementation(() => ({name: 'Mark'}));
         instance.loggedInOrOut();
         // Shallow does not find direct child when inside React.Fragment
         // There is an open issue for React 16 support and as far as I see React.Fragment support is in progress. So, please check for updates.

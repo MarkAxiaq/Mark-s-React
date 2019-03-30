@@ -1,7 +1,6 @@
 const graphql = require('graphql');
 const UserMongoModel = require('./userMongoDB.model');
-const {UserType, AddUserType, UserLoginType} = require('./user.model');
-const JWT = require("jsonwebtoken");
+const {UserType, ReturnUserType} = require('./user.model');
 const passwordHash = require('password-hash');
 const _ = require('lodash');
 
@@ -19,7 +18,7 @@ const {
 const user = {
   type: UserType,
     args: { id: { type: GraphQLID } },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       return UserMongoModel.findById(args.id);
     }
@@ -31,7 +30,7 @@ const user = {
 
 const users = {
   type: new GraphQLList(UserType),
-    resolve(parent, args) {
+    resolve(parent, args, context) {
     try {
       return UserMongoModel.find({});
     }
@@ -43,7 +42,7 @@ const users = {
 
 // MUTATIONS (ADD, UPDATE, DELETE)
 const addUser = {
-  type: AddUserType,
+  type: ReturnUserType,
     args: {
     name: { type: GraphQLNonNull(GraphQLString) },
     surname: { type: GraphQLNonNull(GraphQLString) },
@@ -54,7 +53,7 @@ const addUser = {
     admin: { type: GraphQLNonNull(GraphQLBoolean) },
     websiteId: { type: GraphQLNonNull(new GraphQLList(GraphQLID)) }
   },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       const user = UserMongoModel.findOne({email: args.email});
       return user.then(user => {
@@ -84,12 +83,12 @@ const addUser = {
 };
 
 const userLogin = {
-  type: UserLoginType,
+  type: ReturnUserType,
     args: {
     email: { type: GraphQLNonNull(GraphQLString) },
     password: { type: GraphQLNonNull(GraphQLString) }
   },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       const user = UserMongoModel.findOne({email: args.email});
       return user.then(user => {
@@ -103,9 +102,23 @@ const userLogin = {
         }
 
         // Include only necessary properties to return
-        const userProperties = _.pick(user, ['name', 'email', 'age', 'contactNumber', 'admin', 'websiteId']);
-        const token = JWT.sign(userProperties, 'MarkPassPhraseToChange', {expiresIn: "8h"});
-        return {success: true, token: token};
+        const userProperties = _.pick(user, ['_id', 'name', 'surname', 'email', 'age', 'contactNumber', 'admin', 'websites']);
+
+        // Set response headers property auth
+        // Will be used on the front for authentication and authorisation
+        const auth = {
+          authenticated: true,
+          userId: userProperties._id,
+          authorisation: {admin: userProperties.admin},
+        };
+        context.response.set('auth', JSON.stringify(auth));
+
+        // Setting the user id in express-session
+        // Used to track if user is still logged in or not
+        context.request.session.userId = userProperties._id
+        context.request.session.authorisation = {admin: userProperties.admin}
+
+        return {success: true, user: userProperties, message: 'User logged in successfully'};
       });
     }
     catch(e) {

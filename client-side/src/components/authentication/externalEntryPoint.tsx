@@ -1,11 +1,11 @@
 import * as React from "react";
 import {withRouter} from 'react-router-dom';
-import {setToken, loggedIn} from '../../helpers/auth/authHelperMethods';
+import {setUser, loggedIn} from '../../helpers/auth/authHelperMethods';
 
 export const ExternalEntryPoint = withRouter(({match, ...props }) => {
     const handleTokenAndRedirect = () => {
         // Set passed token in localstorage
-        setToken(match.params.token);
+        setUser(match.params.user);
         // Check if the token is valid and if it is, redirect to page else go to login
         if(loggedIn()){
             props.history.replace(`/${match.params.page}`);

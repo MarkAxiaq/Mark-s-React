@@ -5,15 +5,15 @@ const {WebsiteType, WebsiteResponseType}= require('./website.model');
 const {
   GraphQLString,
   GraphQLID,
-  GraphQLList,
-  GraphQLNonNull
+  GraphQLNonNull,
+  GraphQLList
 } = graphql;
 
 // QUERIES (GRABBING DATA)
 const website = {
   type: WebsiteType,
   args: { id: { type: GraphQLID } },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     // code to get data from MongoDB - findById is a mongoose function
     try {
       return WebsiteMongoModel.findById(args.id);
@@ -26,7 +26,7 @@ const website = {
 
 const websites = {
   type: new GraphQLList(WebsiteType),
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       return WebsiteMongoModel.find({});
     }
@@ -43,7 +43,7 @@ const addWebsite = {
     args: {
     name: { type: new GraphQLNonNull(GraphQLString) }
   },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       const website = WebsiteMongoModel.findOne({name: args.name});
       return website.then(website => {
@@ -71,7 +71,7 @@ const updateWebsite = {
     id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) }
   },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       const website = WebsiteMongoModel.findOne({name: args.name});
       return website.then(website => {
@@ -98,7 +98,7 @@ const deleteWebsite = {
     args: {
     id: { type: new GraphQLNonNull(GraphQLID) }
   },
-  resolve(parent, args) {
+  resolve(parent, args, context) {
     try {
       const website = WebsiteMongoModel.findOne({_id: args.id});
       return website.then(website => {

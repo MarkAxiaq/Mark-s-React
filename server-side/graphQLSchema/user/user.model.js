@@ -12,29 +12,20 @@ const {
   GraphQLList,
 } = graphql;
 
-const UserLoginType = new GraphQLObjectType({
-  name: 'UserLogin',
-  fields: () => ({
-    success: {type: GraphQLBoolean},
-    message: {type: GraphQLString},
-    token: {type: GraphQLString}
-  })
-});
-
 // TODO: change user to token
-const AddUserType = new GraphQLObjectType({
-  name: 'AddUser',
+const ReturnUserType = new GraphQLObjectType({
+  name: 'ReturnUser',
   fields: () => ({
     success: { type: GraphQLBoolean },
     message: {type: GraphQLString},
-    user: {type: UserType}
+    user: {type: UserType},
   })
 });
 
 const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    id: { type: GraphQLID },
+    _id: { type: GraphQLID },
     name: { type: GraphQLString },
     surname: { type: GraphQLString },
     email: { type: GraphQLString },
@@ -58,4 +49,4 @@ const UserType = new GraphQLObjectType({
   })
 });
 
-module.exports = {UserType, AddUserType, UserLoginType};
+module.exports = {UserType, ReturnUserType};

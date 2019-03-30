@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Button, FormGroup, Label, Input, FormFeedback} from 'reactstrap';
 import {Formik, Form, Field, ErrorMessage} from "formik";
-import {loggedIn, setToken } from "../../../helpers/auth/authHelperMethods";
+import {loggedIn, setUser } from "../../../helpers/auth/authHelperMethods";
 import {graphql, compose} from 'react-apollo';
 import {userLogin} from './loginGraphQL.schema';
 import {loginFormValues, LoginFormSchema} from "./loginFormikForm.schema";
@@ -74,7 +74,7 @@ class LoginComponent extends React.Component<any, ILoginState> {
             }
         }).then(res => {
             if(res.data && res.data.userLogin.success){
-                setToken(res.data.userLogin.token);
+                setUser(res.data.userLogin.user);
                 this.props.history.push('/home');
             } else {
                 this.setState({loginFormMessage: res.data.userLogin.message})

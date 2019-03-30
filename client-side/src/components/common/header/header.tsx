@@ -8,7 +8,7 @@ import {
     NavbarBrand,
     Nav,
     NavItem} from 'reactstrap';
-import {loggedIn, getProfile, logout} from "../../../helpers/auth/authHelperMethods";
+import {loggedIn, getUser, logout} from "../../../helpers/auth/authHelperMethods";
 
 class HeaderComponent extends React.Component<{history}, IHeaderState> {
     constructor(props) {
@@ -45,11 +45,11 @@ class HeaderComponent extends React.Component<{history}, IHeaderState> {
 
     public loggedInOrOut = () => {
         if(loggedIn()) {
-            const userProfile = getProfile();
+            const user = getUser();
             // Add any menu items that should be visible when the user is logged in
             return (
                 <div>
-                    <p className="nav-link">Welcome {userProfile.name}</p>
+                    <p className="nav-link">Welcome {user.name}</p>
                     <NavItem>
                         <p className="nav-link" onClick={this.logout}>Log Out</p>
                     </NavItem>

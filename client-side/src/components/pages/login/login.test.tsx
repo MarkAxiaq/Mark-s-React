@@ -10,7 +10,7 @@ describe('LoginComponent', () => {
     const mockFailedResonse = {
         data: {
             userLogin: {
-                token: 'failedResonseToken',
+                user: {name: 'Failure'},
                 success: false,
                 message: 'Some Error Message'
             }
@@ -19,7 +19,7 @@ describe('LoginComponent', () => {
     const mockSuccessResonse = {
         data: {
             userLogin: {
-                token: 'successResonseToken',
+                user: {name: 'Success'},
                 success: true,
                 message: 'Some Success Message'
             }
@@ -76,10 +76,10 @@ describe('LoginComponent', () => {
         const actions = {
             setSubmitting : jest.fn((submitting) => undefined)
         };
-        const setTokenMock = jest.spyOn(Auth, 'setToken');
+        const setUserMock = jest.spyOn(Auth, 'setUser');
         instance.onSubmit(formValues, actions);
-        expect(setTokenMock).toHaveBeenCalled();
-        expect(setTokenMock).toHaveBeenCalledWith('successResonseToken');
+        expect(setUserMock).toHaveBeenCalled();
+        expect(setUserMock).toHaveBeenCalledWith({name: 'Success'});
     });
 
     it('should not call setToken if data success is false', () => {
@@ -88,9 +88,9 @@ describe('LoginComponent', () => {
             setSubmitting : jest.fn((submitting) => undefined)
         };
         userLoginPromiseMock.mockImplementation(jest.fn(({}) => Promise.resolve(mockFailedResonse)));
-        const setTokenMock = jest.spyOn(Auth, 'setToken');
+        const setUserMock = jest.spyOn(Auth, 'setUser');
         instance.onSubmit(formValues, actions);
-        expect(setTokenMock).not.toHaveBeenCalledWith('failedResonseToken');
+        expect(setUserMock).not.toHaveBeenCalledWith({name: 'Failure'});
     });
 
     it('should not call setToken if data success is false and update state', async () => {
