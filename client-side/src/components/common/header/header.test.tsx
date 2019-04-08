@@ -7,7 +7,13 @@ import * as Auth from "../../../helpers/auth/authHelperMethods";
 jest.mock("../../../helpers/auth/authHelperMethods");
 
 describe('HeaderComponent', () => {
-    const wrapper = shallow(<HeaderComponent history={[]} />);
+    const history = {
+        push : (pathName) => {history.location.pathname = pathName},
+        location : {
+            pathname: ''
+        }
+    };
+    const wrapper = shallow(<HeaderComponent history={history} />);
     const instance = wrapper.instance() as HeaderComponent;
 
     it('should change state when toggle method is called', () => {
@@ -17,9 +23,9 @@ describe('HeaderComponent', () => {
     });
 
     it('should push to the props history when logout is called', () => {
-        expect(instance.props).toEqual({ history: [] });
+        expect(instance.props).toEqual({ history });
         instance.logout();
-        expect(instance.props).toEqual({ history: ["/"]});
+        expect(instance.props.history.location.pathname).toEqual("/");
     });
 
     it('should call Auth.logout when logout is called', () => {

@@ -48,22 +48,28 @@ class HeaderComponent extends React.Component<{history}, IHeaderState> {
             const user = getUser();
             // Add any menu items that should be visible when the user is logged in
             return (
-                <div>
-                    <p className="nav-link">Welcome {user.name}</p>
+                <>
+                    <NavItem>
+                        <p className="nav-link">Welcome {user.name}</p>
+                    </NavItem>
                     <NavItem>
                         <p className="nav-link" onClick={this.logout}>Log Out</p>
                     </NavItem>
-                </div>
+                </>
             )
         } else {
             // Add any menu items that should be visible when the user is logged out
-            return (
-                <NavItem >
-                    <Link className="nav-link" to="/">Login</Link>
-                </NavItem>
-            )
+            if(this.props.history.location.pathname !== '/') {
+                // If we are not on the Login Page
+                return (
+                    <NavItem >
+                        <Link className="nav-link" to="/">Login</Link>
+                    </NavItem>
+                )
+            }
+            return null;
         }
-    }
+    };
 
     public logout = () => {
         logout();

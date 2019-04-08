@@ -21,9 +21,9 @@ Use **nodemon app** OR **npm start**, to start the application using nodemon whi
 To access the app go to localhost:4321 - Port can be changed accordingly
 
 If Error: listen EADDRINUSE :::4321 is displayed: (Especially on MAC)
-    1. lsof -i tcp:4321
-    2. Copy PID
-    3. kill -9 PID
+* lsof -i tcp:4321
+* Copy PID
+* kill -9 PID
 
 # .ENV file
 .env file is excluded from the project on purpose (git ignored) - as here we can store sensitive data required in the project.
